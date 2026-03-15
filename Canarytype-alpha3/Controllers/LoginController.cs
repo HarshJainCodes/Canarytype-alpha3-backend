@@ -102,14 +102,7 @@ namespace Canarytype_alpha3.Controllers
             string pictureURL = payload.GetValue("picture").ToString();
 
             string uniqueUserName = string.Join("", userName.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries)) + HelperFunctions.GenerateGroupName(3);
-            UserInfo maybeUser;
-            try
-            {
-                maybeUser = _canaryTypeDBContext.UsersTable.Where(user => user.UserEmail == userEmail).FirstOrDefault();
-            } catch(Exception e)
-            {
-                maybeUser = null;
-            }
+            UserInfo maybeUser = _canaryTypeDBContext.UsersTable.Where(user => user.UserEmail == userEmail).FirstOrDefault();
 
             if (maybeUser != null)
             {
