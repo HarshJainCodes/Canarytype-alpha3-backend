@@ -8,7 +8,7 @@ using System.Text;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MassTransit;
-using CanaryEmailsService.Contracts;
+//using CanaryEmailsService.Contracts;
 using Canarytype_alpha3.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,15 +23,15 @@ builder.Services.AddScoped<LoginController>();
 
 builder.Services.AddSignalR();
 
-builder.Services.AddMassTransit(x =>
-{
-    x.UsingAzureServiceBus((context, config) =>
-    {
-        config.Host(builder.Configuration.GetConnectionString("AzureServiceBus"));
-        config.Message<ISendEmailMessage>(configurator => { });
-        config.Publish<ISendEmailMessage>(topology => { });
-    });
-});
+//builder.Services.AddMassTransit(x =>
+//{
+//    x.UsingAzureServiceBus((context, config) =>
+//    {
+//        config.Host(builder.Configuration.GetConnectionString("AzureServiceBus"));
+//        config.Message<ISendEmailMessage>(configurator => { });
+//        config.Publish<ISendEmailMessage>(topology => { });
+//    });
+//});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -110,10 +110,10 @@ builder.Services.AddAuthentication(options =>
         }
     };
 });
-builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
-{
-    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
-});
+//builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
+//{
+//    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+//});
 
 var app = builder.Build();
 
@@ -124,7 +124,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("CanaryTypeCorsPolicy");
 

@@ -1,6 +1,6 @@
 ﻿using Azure;
 using Azure.Core;
-using CanaryEmailsService.Contracts;
+//using CanaryEmailsService.Contracts;
 using Canarytype_alpha3.Data;
 using Canarytype_alpha3.Utils;
 using Google.Apis.Auth;
@@ -24,13 +24,13 @@ namespace Canarytype_alpha3.Controllers
         private IConfiguration _configuration;
 
         private CanaryTypeDBContext _canaryTypeDBContext;
-        private readonly IBusControl _busControl;
+        //private readonly IBusControl _busControl;
 
-        public LoginController(IConfiguration configuration, CanaryTypeDBContext canaryTypeDBContext, IBusControl busControl)
+        public LoginController(IConfiguration configuration, CanaryTypeDBContext canaryTypeDBContext)
         {
             _configuration = configuration;
             _canaryTypeDBContext = canaryTypeDBContext;
-            _busControl = busControl;
+            //_busControl = busControl;
         }
 
         [HttpPost]
@@ -102,12 +102,18 @@ namespace Canarytype_alpha3.Controllers
             string pictureURL = payload.GetValue("picture").ToString();
 
             string uniqueUserName = string.Join("", userName.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries)) + HelperFunctions.GenerateGroupName(3);
-
-            UserInfo maybeUser = _canaryTypeDBContext.UsersTable.Where(user => user.UserEmail == userEmail).FirstOrDefault();
+            UserInfo maybeUser;
+            try
+            {
+                maybeUser = _canaryTypeDBContext.UsersTable.Where(user => user.UserEmail == userEmail).FirstOrDefault();
+            } catch(Exception e)
+            {
+                maybeUser = null;
+            }
 
             if (maybeUser != null)
             {
-                GenerateJWTToken(new JWTInputs
+                var token = GenerateJWTToken(new JWTInputs
                 {
                     Name = userName,
                     Email = userEmail,
@@ -118,6 +124,7 @@ namespace Canarytype_alpha3.Controllers
                     UserName = userName,
                     UniqueUserName = maybeUser.UniqueName,
                     IsError = false,
+                    Token = token,
                 });
             }
             else
@@ -133,12 +140,12 @@ namespace Canarytype_alpha3.Controllers
 
                 await _canaryTypeDBContext.SaveChangesAsync();
 
-                await _busControl.Publish<ISendEmailMessage>(new SendEmailMessage
-                {
-                    ToEmail = userEmail,
-                    Body = "Welcome to CanaryType",
-                    Subject = "Welcome"
-                });
+                //await _busControl.Publish<ISendEmailMessage>(new SendEmailMessage
+                //{
+                //    ToEmail = userEmail,
+                //    Body = "Welcome to CanaryType",
+                //    Subject = "Welcome"
+                //});
 
                 GenerateJWTToken(new JWTInputs
                 {
@@ -196,7 +203,7 @@ namespace Canarytype_alpha3.Controllers
         }
 
         [NonAction]
-        public void GenerateJWTToken(JWTInputs jwtInput, HttpContext httpContext)
+        public string GenerateJWTToken(JWTInputs jwtInput, HttpContext httpContext)
         {
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSecret"));
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -223,10 +230,12 @@ namespace Canarytype_alpha3.Controllers
             {
                 Expires = DateTime.Now.AddMinutes(10),
                 HttpOnly = true,
-                Secure = true,
+                Secure = false,
                 IsEssential = true,
                 SameSite = SameSiteMode.None
             });
+
+            return generatedToken;
         }
     }
 
