@@ -22,14 +22,16 @@ namespace Canarytype_alpha3.Controllers
     public class LoginController : Controller
     {
         private IConfiguration _configuration;
+        private ILogger<LoginController> _logger;
 
         private CanaryTypeDBContext _canaryTypeDBContext;
         //private readonly IBusControl _busControl;
 
-        public LoginController(IConfiguration configuration, CanaryTypeDBContext canaryTypeDBContext)
+        public LoginController(IConfiguration configuration, CanaryTypeDBContext canaryTypeDBContext, ILogger<LoginController> logger)
         {
             _configuration = configuration;
             _canaryTypeDBContext = canaryTypeDBContext;
+            _logger = logger;
             //_busControl = busControl;
         }
 
@@ -176,6 +178,9 @@ namespace Canarytype_alpha3.Controllers
         // use this if you are using custom button provided by you
         private async Task<JObject> ValidateGoogleTokenV2(string access_token)
         {
+            try
+            {
+
             using (var httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access_token);
@@ -192,6 +197,10 @@ namespace Canarytype_alpha3.Controllers
                 var userInfo = JObject.Parse(jsonResponse);
 
                 return userInfo;
+            }
+            } catch (Exception e)
+            {
+                _logger.LogError(e.Message);
             }
         }
 
