@@ -15,6 +15,7 @@
     <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.68.0" />
     <PackageReference Include="MassTransit" Version="8.3.1" />
     <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.3.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.4.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.21.2" />
