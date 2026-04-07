@@ -223,7 +223,7 @@ namespace Canarytype_alpha3.Controllers
             {
                 Expires = DateTime.Now.AddMinutes(10),
                 HttpOnly = true,
-                Secure = false,
+                Secure = true,
                 IsEssential = true,
                 SameSite = SameSiteMode.None
             });
