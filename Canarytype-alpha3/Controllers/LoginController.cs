@@ -201,6 +201,7 @@ namespace Canarytype_alpha3.Controllers
             } catch (Exception e)
             {
                 _logger.LogError(e.Message);
+                throw;
             }
         }
 
