@@ -98,10 +98,14 @@ namespace Canarytype_alpha3.Controllers
         [HttpPost]
         public async Task<ActionResult> HandleLoginWithGoogle(HandleWithGoogleRequest request)
         {
-            var payload = await ValidateGoogleTokenV2(request.idToken);
-            string userName = payload.GetValue("name").ToString();
-            string userEmail = payload.GetValue("email").ToString();
-            string pictureURL = payload.GetValue("picture").ToString();
+            var payload = await ValidateGoogleToken(request.idToken);
+            //string userName = payload.GetValue("name").ToString();
+            //string userEmail = payload.GetValue("email").ToString();
+            //string pictureURL = payload.GetValue("picture").ToString();
+
+            string userName = payload.Name;
+            string userEmail = payload.Email;
+            string pictureURL = payload.Picture;
 
             string uniqueUserName = string.Join("", userName.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries)) + HelperFunctions.GenerateGroupName(3);
             UserInfo maybeUser = _canaryTypeDBContext.UsersTable.Where(user => user.UserEmail == userEmail).FirstOrDefault();
