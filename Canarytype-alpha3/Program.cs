@@ -79,7 +79,8 @@ builder.Services.AddCors(options =>
             "https://proud-island-01ae65f00.5.azurestaticapps.net", 
             "https://accounts.google.com",
             "https://localhost:3000",
-            "https://canarytype-react.harshjain17.com"
+            "https://canarytype-react.harshjain17.com",
+            "https://canarytype.harshjain.dev"
         ).AllowAnyMethod().AllowAnyHeader().AllowCredentials();
     });
 });
